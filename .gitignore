@@ -42,3 +42,6 @@ env/
 
 # FastAPI/Uvicorn
 *.pid
+
+# Upload directory
+uploads/
