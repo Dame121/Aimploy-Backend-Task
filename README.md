@@ -1,53 +1,301 @@
-# AIMPLOY Backend - PDF Processing API
+# 🚀 AIMPLOY Backend - PDF Processing API
 
-A FastAPI-based REST API for processing PDF files, extracting structured data including text, tables, and metadata with comprehensive error handling.
+![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?style=flat-square&logo=fastapi)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
 
-## Table of Contents
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
-- [API Endpoints](#api-endpoints)
-- [Sample Requests & Responses](#sample-requests--responses)
-- [Error Handling](#error-handling)
-- [Configuration](#configuration)
+A production-ready **FastAPI-based REST API** for intelligent PDF processing and data extraction. Seamlessly extract text, tables, and metadata from PDF documents with robust error handling, comprehensive validation, and an intuitive testing interface.
 
----
+## 📋 Table of Contents
 
-## Features
-
-✅ **PDF File Upload** - Accept PDF files with validation
-✅ **Text Extraction** - Extract all text content from PDF pages
-✅ **Table Extraction** - Extract structured table data
-✅ **Metadata Extraction** - Get PDF metadata (pages, author, title, creation date)
-✅ **File Validation** - Extension and size checks (max 50MB)
-✅ **Error Handling** - Comprehensive error responses
-✅ **Automatic Cleanup** - Temporary files are automatically removed
-✅ **Interactive API Docs** - Swagger UI at `/docs`
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [API Endpoints](#-api-endpoints)
+- [Usage Examples](#-usage-examples)
+- [Testing](#-testing)
+- [Error Handling](#-error-handling)
+- [Future Enhancements](#-future-enhancements)
 
 ---
 
-## Project Structure
+## 🎯 Overview
+
+AIMPLOY Backend is a robust PDF processing service designed for enterprise-level document handling. It provides a clean REST API interface for extracting valuable information from PDF files, including:
+
+- 📝 **Full Text Extraction** - Extract all textual content while preserving structure
+- 📊 **Table Recognition** - Automatically detect and extract complex tables
+- 📋 **Metadata Retrieval** - Extract document properties and information
+- 🔍 **Intelligent Validation** - Comprehensive file type and size validation
+- 🎨 **Interactive UI** - Built-in web interface for API testing and exploration
+
+---
+
+## ✨ Key Features
+
+✅ **Reliable PDF Processing** - Handle PDF uploads up to 50MB with validation  
+✅ **Structured Data Extraction** - Extract text, tables, and metadata in JSON format  
+✅ **Smart Error Handling** - Comprehensive error messages and HTTP status codes  
+✅ **Automatic Cleanup** - Temporary files are securely removed after processing  
+✅ **CORS Enabled** - Ready for cross-origin requests and web integrations  
+✅ **Interactive API Documentation** - Swagger UI for easy endpoint exploration  
+✅ **Web Testing UI** - Professional interface for testing all API endpoints  
+✅ **Production Ready** - Health checks and service monitoring endpoints  
+
+---
+
+## 🛠️ Technology Stack
+
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| Framework | FastAPI | 0.104.1 |
+| Server | Uvicorn | 0.24.0 |
+| PDF Processing | PDFPlumber | 0.10.3 |
+| Data Validation | Pydantic | 2.5.0 |
+| Python | Python | 3.12.5 |
+| Environment | python-dotenv | 1.0.0 |
+
+---
+
+## 📁 Project Structure
 
 ```
 AIMPLOY Backend/
-├── main.py                 # Application entry point
-├── models.py              # Pydantic response models
-├── utils.py               # PDF extraction utilities
-├── requirements.txt       # Project dependencies
-├── README.md              # This file
-├── .gitignore             # Git ignore rules
-└── routes/
+│
+├── 📄 main.py                     # FastAPI application entry point
+├── 📊 models.py                   # Pydantic response models & schemas
+├── 🛠️  utils.py                    # PDF extraction utility functions
+├── 📋 requirements.txt             # Python dependencies
+├── 📖 README.md                    # Project documentation
+├── 🌐 index.html                   # Interactive testing UI
+├── 🔧 create_sample_pdf.py        # Sample PDF generator for testing
+│
+└── 📁 routes/
     ├── __init__.py
-    └── pdf.py             # PDF processing endpoints
+    └── pdf.py                      # PDF processing endpoints & logic
 ```
 
 ---
 
-## Setup Instructions
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
+
+- **Python 3.8+** (Tested on Python 3.12.5)
+- **pip** or **conda** for package management
+- **Git** for version control
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd "AIMPLOY Backend"
+   ```
+
+2. **Create and activate virtual environment**
+   ```bash
+   # Windows
+   python -m venv .venv
+   .venv\Scripts\activate
+
+   # macOS/Linux
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the application**
+   ```bash
+   python main.py
+   ```
+
+   Server will start at: `http://localhost:8000`
+
+---
+
+## 🔌 API Endpoints
+
+### 1. Health Check Endpoint
+
+**Description:** Verify API service is running and healthy
+
+```http
+GET /api/pdf/health
+```
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "service": "PDF Processing API"
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 2. PDF Upload & Processing Endpoint
+
+**Description:** Upload and process a PDF file to extract text, tables, and metadata
+
+```http
+POST /api/pdf/upload
+Content-Type: multipart/form-data
+
+Parameters:
+  - file: <PDF file> (required, max 50MB)
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "file_name": "document.pdf",
+  "message": "PDF processed successfully",
+  "data": {
+    "text": "Extracted text content...",
+    "tables": [
+      [["Header1", "Header2"], ["Row1", "Data1"]],
+      [["Header3", "Header4"], ["Row2", "Data2"]]
+    ],
+    "metadata": {
+      "pages": 5,
+      "title": "Document Title",
+      "author": "Author Name",
+      "created": "2024-01-15",
+      "modified": "2024-01-16",
+      "producer": "ReportLab PDF Producer"
+    }
+  }
+}
+```
+
+**Error Response (400/413):**
+```json
+{
+  "detail": "Error message describing what went wrong"
+}
+```
+
+---
+
+## 📚 Usage Examples
+
+### Using cURL
+
+**Test Health Endpoint:**
+```bash
+curl -X GET http://localhost:8000/api/pdf/health
+```
+
+**Upload and Process PDF:**
+```bash
+curl -X POST -F "file=@document.pdf" http://localhost:8000/api/pdf/upload
+```
+
+### Using Python Requests
+
+```python
+import requests
+
+# Health check
+response = requests.get("http://localhost:8000/api/pdf/health")
+print(response.json())
+
+# Upload PDF
+with open("document.pdf", "rb") as f:
+    files = {"file": f}
+    response = requests.post(
+        "http://localhost:8000/api/pdf/upload",
+        files=files
+    )
+    print(response.json())
+```
+
+### Using the Web Interface
+
+1. Open browser: `http://localhost:8000/index.html`
+2. Click "Check Health" to verify API status
+3. Upload a PDF file using the drag-and-drop interface
+4. View structured results with formatted tables and metadata
+5. Switch between "Structured View" and "Raw JSON" tabs
+
+---
+
+## 🧪 Testing
+
+### Generate Sample PDF
+
+Create a test PDF file:
+```bash
+python create_sample_pdf.py
+```
+
+This generates `sample_document.pdf` with sample content for testing.
+
+### API Documentation
+
+- **Interactive Swagger UI:** `http://localhost:8000/docs`
+- **ReDoc Documentation:** `http://localhost:8000/redoc`
+
+---
+
+## ⚠️ Error Handling
+
+The API provides clear, actionable error messages:
+
+| Error | Status | Message |
+|-------|--------|---------|
+| Invalid file format | 400 | `Invalid file format. Only PDF files are accepted.` |
+| File too large | 413 | `File size exceeds maximum limit of 50MB` |
+| Processing error | 400 | `Error processing PDF: [details]` |
+| No text found | 400 | `No text content found in PDF` |
+
+All errors include HTTP status codes and detailed descriptions for easy debugging.
+
+---
+
+## 🔮 Future Enhancements
+
+- [ ] Add image extraction from PDFs
+- [ ] Implement OCR for scanned documents
+- [ ] Support for multiple file formats (DOCX, XLSX, PPTX)
+- [ ] Batch file processing
+- [ ] User authentication and API keys
+- [ ] Rate limiting and quota management
+- [ ] Advanced text analysis (NLP, sentiment analysis)
+- [ ] Database integration for result storage
+- [ ] Admin dashboard for monitoring
+- [ ] Docker containerization
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👤 Author
+
+**AIMPLOY Team**
+
+*Building intelligent document processing solutions for the modern enterprise.*
+
+---
+
+## 📧 Support & Questions
+
+For questions, issues, or feature requests, please open an issue in the repository.
 
 ### Step 1: Clone/Download Project
 ```powershell
