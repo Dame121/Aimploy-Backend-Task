@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIMPLOY PDF API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 0 0 45%;
+            padding: 30px;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 30px;
+            background: #fafafa;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 22px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .file-input-label:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .file-input-label.drag-over {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: white;
+        }
+
+        .file-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 10px;
+            color: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e8e8e8;
+            border-color: #bbb;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .endpoint-info {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f1ff 100%);
+            border-left: 4px solid #667eea;
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: #555;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Results Panel */
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .results-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 18px;
+            display: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .results-title::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 22px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+            margin-right: 10px;
+        }
+
+        .results-title.show {
+            display: block;
+        }
+
+        .results-content {
+            flex: 1;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .results-content.show {
+            display: block;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-info-text {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-category-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .result-item {
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+            color: #555;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .result-value.text-content {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .result-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .result-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+        }
+
+        .result-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #667eea;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* Response Tabs */
+        .response-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 16px;
+        }
+
+        .tab-button {
+            padding: 12px 18px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-button:hover:not(.active) {
+            color: #555;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* JSON Viewer */
+        .json-viewer {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .json-key {
+            color: #9cdcfe;
+        }
+
+        .json-string {
+            color: #ce9178;
+        }
+
+        .json-number {
+            color: #b5cea8;
+        }
+
+        .json-boolean {
+            color: #569cd6;
+        }
+
+        .json-null {
+            color: #569cd6;
+        }
+
+        .json-bracket {
+            color: #d4d4d4;
+        }
+
+        .json-expandable {
+            user-select: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .json-expandable:hover {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 4px;
+            margin: -2px -4px;
+            border-radius: 3px;
+        }
+
+        .json-toggle {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .json-nested {
+            margin-left: 16px;
+        }
+
+        .json-nested.collapsed {
+            display: none;
+        }
+
+        /* Raw Response */
+        .raw-response {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .copy-button:hover {
+            background: #764ba2;
+        }
+
+        .copy-button.copied {
+            background: #28a745;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                flex: 0 0 auto;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                padding: 25px;
+            }
+
+            .right-panel {
+                flex: 1;
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .left-panel,
+            .right-panel {
+                padding: 20px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AIMPLOY PDF API Tester</h1>
+            <p>Extract Text, Tables & Metadata from PDF Documents</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Panel: Input -->
+            <div class="left-panel">
+                <!-- Health Check Section -->
+                <div class="section">
+                    <div class="section-title">System Status</div>
+                    <div class="endpoint-info">GET /api/pdf/health</div>
+                    <button class="btn-primary" onclick="checkHealth()" style="width: 100%;">Check Health</button>
+                </div>
+
+                <!-- Upload PDF Section -->
+                <div class="section">
+                    <div class="section-title">Upload PDF</div>
+                    <div class="endpoint-info">POST /api/pdf/upload</div>
+                    
+                    <form id="uploadForm" onsubmit="handleUpload(event)">
+                        <div class="form-group">
+                            <label for="pdfFile">Select PDF File (Max 50MB)</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="pdfFile" accept=".pdf" required>
+                                <label for="pdfFile" class="file-input-label" id="fileLabel">
+                                    <span class="file-icon">📄</span>
+                                    Click to select or drag and drop
+                                    <span class="file-name" id="fileName"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn-primary">Process PDF</button>
+                            <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="right-panel">
+                <div class="results-container">
+                    <div class="results-title">API Response</div>
+                    <div class="results-content" id="resultsContent">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div class="empty-state-text">Results will appear here after processing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // File input handling
+        const fileInput = document.getElementById('pdfFile');
+        const fileLabel = document.getElementById('fileLabel');
+        const fileName = document.getElementById('fileName');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileName.textContent = `Selected: ${this.files[0].name} (${formatFileSize(this.files[0].size)})`;
+            }
+        });
+
+        // Drag and drop
+        fileLabel.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileLabel.classList.add('drag-over');
+        });
+
+        fileLabel.addEventListener('dragleave', () => {
+            fileLabel.classList.remove('drag-over');
+        });
+
+        fileLabel.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileLabel.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileName.textContent = `Selected: ${e.dataTransfer.files[0].name} (${formatFileSize(e.dataTransfer.files[0].size)})`;
+            }
+        });
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        let lastResponseData = null;
+
+        function showResults(title, data, isError = false) {
+            lastResponseData = data;
+            const resultsContent = document.getElementById('resultsContent');
+            const resultsTitle = document.querySelector('.results-title');
+            const statusClass = isError ? 'status-error' : 'status-success';
+            const statusText = isError ? 'Error' : 'Success';
+
+            let html = `
+                <div class="status-header">
+                    <div class="status-info">
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                        <span class="status-info-text">${title}</span>
+                    </div>
+                </div>
+            `;
+
+            if (isError) {
+                html += `
+                    <div class="results-section">
+                        <div class="result-category-title">Error Details</div>
+                        <div class="result-value" style="border-left-color: #dc3545;">${escapeHtml(typeof data === 'string' ? data : JSON.stringify(data, null, 2))}</div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="response-tabs">
+                        <button class="tab-button active" onclick="switchTab('structured')">📊 Structured View</button>
+                        <button class="tab-button" onclick="switchTab('raw')">📄 Raw JSON</button>
+                    </div>
+
+                    <div id="structured-tab" class="tab-content active">
+                        ${buildStructuredResults(data)}
+                    </div>
+
+                    <div id="raw-tab" class="tab-content">
+                        <button class="copy-button" onclick="copyToClipboard()">📋 Copy JSON</button>
+                        <div class="json-viewer" id="jsonViewer">
+                            ${formatJSONForDisplay(data, 0)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            resultsContent.innerHTML = html;
+            resultsTitle.classList.add('show');
+            resultsContent.classList.add('show');
+        }
+
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function formatJSONForDisplay(obj, depth = 0) {
+            const indent = '  '.repeat(depth);
+            const nextIndent = '  '.repeat(depth + 1);
+
+            if (obj === null) return '<span class="json-null">null</span>';
+            if (typeof obj === 'boolean') return `<span class="json-boolean">${obj}</span>`;
+            if (typeof obj === 'number') return `<span class="json-number">${obj}</span>`;
+            if (typeof obj === 'string') return `<span class="json-string">"${escapeHtml(obj)}"</span>`;
+
+            if (Array.isArray(obj)) {
+                if (obj.length === 0) return '<span class="json-bracket">[]</span>';
+                
+                let html = '<span class="json-bracket">[</span>';
+                obj.forEach((item, index) => {
+                    html += `<div class="json-nested">${nextIndent}${formatJSONForDisplay(item, depth + 1)}${index < obj.length - 1 ? ',' : ''}</div>`;
+                });
+                html += `<div>${indent}<span class="json-bracket">]</span></div>`;
+                return html;
+            }
+
+            if (typeof obj === 'object') {
+                const keys = Object.keys(obj);
+                if (keys.length === 0) return '<span class="json-bracket">{}</span>';
+
+                let html = '<span class="json-bracket">{</span>';
+                keys.forEach((key, index) => {
+                    html += `<div class="json-nested">
+                        ${nextIndent}<span class="json-key">"${key}"</span>: ${formatJSONForDisplay(obj[key], depth + 1)}${index < keys.length - 1 ? ',' : ''}
+                    </div>`;
+                });
+                html += `<div>${indent}<span class="json-bracket">}</span></div>`;
+                return html;
+            }
+
+            return String(obj);
+        }
+
+        function copyToClipboard() {
+            const jsonText = JSON.stringify(lastResponseData, null, 2);
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy JSON';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function buildStructuredResults(data) {
+            let html = '';
+
+            // Status Section
+            if (data.success !== undefined) {
+                html += `
+                    <div class="results-section">
+                        <div class="result-category-title">✅ Response Status</div>
+                        <div class="result-item">
+                            <div class="result-label">Success</div>
+                            <div class="result-value">${data.success ? '✓ True' : '✗ False'}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // File Information
+            if (data.file_name) {
+                html += `
+                    <div class="results-section">
+                        <div class="result-category-title">📋 File Information</div>
+                        <div class="result-item">
+                            <div class="result-label">File Name</div>
+                            <div class="result-value">${escapeHtml(data.file_name)}</div>
+                        </div>
+                        ${data.message ? `
+                        <div class="result-item">
+                            <div class="result-label">Message</div>
+                            <div class="result-value">${escapeHtml(data.message)}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Metadata
+            if (data.data && data.data.metadata) {
+                const metadata = data.data.metadata;
+                let metadataHtml = '<div class="results-section"><div class="result-category-title">📊 Document Metadata</div>';
+                
+                if (metadata.pages) {
+                    metadataHtml += `
+                    <div class="result-item">
+                        <div class="result-label">Total Pages</div>
+                        <div class="result-value">${escapeHtml(String(metadata.pages))}</div>
+                    </div>`;
+                }
+                if (metadata.title) {
+                    metadataHtml += `
+                    <div class="result-item">
+                        <div class="result-label">Title</div>
+                        <div class="result-value">${escapeHtml(metadata.title)}</div>
+                    </div>`;
+                }
+                if (metadata.author) {
+                    metadataHtml += `
+                    <div class="result-item">
+                        <div class="result-label">Author</div>
+                        <div class="result-value">${escapeHtml(metadata.author)}</div>
+                    </div>`;
+                }
+                if (metadata.created) {
+                    metadataHtml += `
+                    <div class="result-item">
+                        <div class="result-label">Created Date</div>
+                        <div class="result-value">${escapeHtml(metadata.created)}</div>
+                    </div>`;
+                }
+                if (metadata.modified) {
+                    metadataHtml += `
+                    <div class="result-item">
+                        <div class="result-label">Modified Date</div>
+                        <div class="result-value">${escapeHtml(metadata.modified)}</div>
+                    </div>`;
+                }
+                if (metadata.producer) {
+                    metadataHtml += `
+                    <div class="result-item">
+                        <div class="result-label">Producer</div>
+                        <div class="result-value">${escapeHtml(metadata.producer)}</div>
+                    </div>`;
+                }
+                
+                metadataHtml += '</div>';
+                html += metadataHtml;
+            }
+
+            // Extracted Text
+            if (data.data && data.data.text) {
+                const text = data.data.text;
+                const textPreview = text.substring(0, 400);
+                html += `
+                    <div class="results-section">
+                        <div class="result-category-title">📝 Extracted Text Content</div>
+                        <div class="result-item">
+                            <div class="result-label">Character Count</div>
+                            <div class="result-value">${text.length.toLocaleString()} characters</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Word Count</div>
+                            <div class="result-value">${text.split(/\s+/).filter(w => w).length.toLocaleString()} words</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Line Count</div>
+                            <div class="result-value">${text.split('\n').length.toLocaleString()} lines</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Preview</div>
+                            <div class="result-value text-content">${escapeHtml(textPreview)}${text.length > 400 ? '...[truncated]' : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Extracted Tables
+            if (data.data && data.data.tables && data.data.tables.length > 0) {
+                html += `<div class="results-section">
+                    <div class="result-category-title">📈 Extracted Tables (${data.data.tables.length} total)</div>
+                `;
+                
+                data.data.tables.forEach((table, index) => {
+                    if (table && table.length > 0) {
+                        html += `
+                            <div class="result-item" style="border-bottom: none; padding-bottom: 0;">
+                                <div class="result-label">Table ${index + 1} (${table.length - 1} rows, ${table[0].length} columns)</div>
+                                <div class="table-wrapper">
+                                    <table class="result-table">
+                                        <thead>
+                                            <tr>
+                                                ${table[0].map((cell, i) => `<th>${escapeHtml(String(cell) || `Col ${i + 1}`)}</th>`).join('')}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${table.slice(1).map((row, rowIdx) => `
+                                                <tr>
+                                                    ${row.map(cell => `<td>${escapeHtml(String(cell))}</td>`).join('')}
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                html += '</div>';
+            }
+
+            // Health Check Response
+            if (data.status) {
+                html += `
+                    <div class="results-section">
+                        <div class="result-category-title">🏥 Health Status</div>
+                        <div class="result-item">
+                            <div class="result-label">Status</div>
+                            <div class="result-value">${escapeHtml(data.status)}</div>
+                        </div>
+                        ${data.service ? `
+                        <div class="result-item">
+                            <div class="result-label">Service Name</div>
+                            <div class="result-value">${escapeHtml(data.service)}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        async function checkHealth() {
+            try {
+                const btn = event.target;
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span>Checking...';
+
+                const response = await fetch(`${API_BASE_URL}/api/pdf/health`);
+                if (!response.ok) throw new Error('Health check failed');
+                const data = await response.json();
+
+                showResults('System Status', data, false);
+            } catch (error) {
+                showResults('Health Check Error', error.message, true);
+            } finally {
+                event.target.disabled = false;
+                event.target.innerHTML = 'Check Health';
+            }
+        }
+
+        async function handleUpload(event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('pdfFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showResults('Upload Error', 'Please select a PDF file', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const btn = event.target.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span>Processing...';
+
+                const response = await fetch(`${API_BASE_URL}/api/pdf/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showResults('Upload Error', data.detail || data.message || 'Unknown error', true);
+                } else {
+                    showResults('PDF Processed Successfully', data, false);
+                }
+            } catch (error) {
+                showResults('Upload Error', error.message, true);
+            } finally {
+                event.target.querySelector('button[type="submit"]').disabled = false;
+                event.target.querySelector('button[type="submit"]').innerHTML = 'Process PDF';
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('uploadForm').reset();
+            document.getElementById('fileName').textContent = '';
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <div class="empty-state-text">Results will appear here after processing</div>
+                </div>
+            `;
+            document.querySelector('.results-title').classList.remove('show');
+            document.getElementById('resultsContent').classList.remove('show');
+            lastResponseData = null;
+        }
+    </script>
+</body>
+</html>
